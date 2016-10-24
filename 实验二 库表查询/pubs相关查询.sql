@@ -65,3 +65,7 @@ select title 书名,price 书价 from titles where price=(select MAX(price)from titl
 ----列出当年销量的总和。 
 select sum(ytd_sales) from titles
 ----构造其他查询条件和统计要求，给出查询结果。
+select count(au_id) from authors
+select count(distinct au_id) from authors
+select au_id from authors
+select sum(price)from titles
