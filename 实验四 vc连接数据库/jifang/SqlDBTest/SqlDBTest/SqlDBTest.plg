@@ -1,0 +1,32 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: SqlDBTest - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/SqlDBTest.res" /d "_DEBUG" /d "_AFXDLL" "E:\SqlDBTest\SqlDBTest\SqlDBTest.rc"" 
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP17B7.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/SqlDBTest.pdb" /debug /machine:I386 /out:"Debug/SqlDBTest.exe" /pdbtype:sept 
+.\Debug\MainFrm.obj
+.\Debug\SqlDBTest.obj
+.\Debug\SqlDBTestDoc.obj
+.\Debug\SqlDBTestSet.obj
+.\Debug\SqlDBTestView.obj
+.\Debug\StdAfx.obj
+.\Debug\SqlDBTest.res
+]
+Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP17B7.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Linking...
+
+
+
+<h3>Results</h3>
+SqlDBTest.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
