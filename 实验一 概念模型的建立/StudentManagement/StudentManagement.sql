@@ -495,7 +495,7 @@ go
 create table xk (
    kcdm                 char(10)             not null,
    xh                   char(12)             not null,
-   cj                   numeric(3,1)         not null,
+   cj                   numeric(3,1)         null,
    bkcj                 numeric(3,1)         null,
    constraint PK_XK primary key nonclustered (kcdm, xh)
 )
