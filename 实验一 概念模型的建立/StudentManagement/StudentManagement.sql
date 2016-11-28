@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     2016/10/16 21:36:10                          */
+/* Created on:     2016/11/28 20:07:31                          */
 /*==============================================================*/
 
 
@@ -55,16 +55,16 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('xk') and o.name = 'FK_XK_XSXK_XS')
+   where r.fkeyid = object_id('xk') and o.name = 'FK_XK_KCTOXK_KC')
 alter table xk
-   drop constraint FK_XK_XSXK_XS
+   drop constraint FK_XK_KCTOXK_KC
 go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('xk') and o.name = 'FK_XK_课程TO选课_KC')
+   where r.fkeyid = object_id('xk') and o.name = 'FK_XK_XSXK_XS')
 alter table xk
-   drop constraint FK_XK_课程TO选课_KC
+   drop constraint FK_XK_XSXK_XS
 go
 
 if exists (select 1
@@ -231,10 +231,10 @@ go
 if exists (select 1
             from  sysindexes
            where  id    = object_id('xk')
-            and   name  = '课程to选课_FK'
+            and   name  = 'kctoxk_FK'
             and   indid > 0
             and   indid < 255)
-   drop index xk.课程to选课_FK
+   drop index xk.kctoxk_FK
 go
 
 if exists (select 1
@@ -356,11 +356,11 @@ go
 /* Table: cfgl                                                  */
 /*==============================================================*/
 create table cfgl (
-   cfdm                 int                  not null,
+   cfdm                 char(10)             not null,
    xh                   char(12)             not null,
-   cfsj                 datetime             not null,
+   cfsj                 date	             not null,
    cfnr                 varchar(200)         not null,
-   constraint PK_CFGL primary key nonclustered (cfdm)
+   constraint PK_CFGL primary key nonclustered (cfdm, xh)
 )
 go
 
@@ -376,11 +376,11 @@ go
 /* Table: jlgl                                                  */
 /*==============================================================*/
 create table jlgl (
-   jldm                 int                  not null,
+   jldm                 char(10)             not null,
    xh                   char(12)             not null,
-   jlsj                 datetime             not null,
+   jlsj                 date	             not null,
    jlnr                 varchar(200)         not null,
-   constraint PK_JLGL primary key nonclustered (jldm)
+   constraint PK_JLGL primary key nonclustered (jldm,xh)
 )
 go
 
@@ -440,7 +440,7 @@ create table shgx (
    chdm                 char(2)              not null,
    xh                   char(12)             not null,
    qsxm                 varchar(50)          null,
-   亲属联系方式               char(11)             null,
+   qslxfs               char(11)             null,
    constraint PK_SHGX primary key nonclustered (chdm, xh)
 )
 go
@@ -510,9 +510,9 @@ xh ASC
 go
 
 /*==============================================================*/
-/* Index: 课程to选课_FK                                             */
+/* Index: kctoxk_FK                                             */
 /*==============================================================*/
-create index 课程to选课_FK on xk (
+create index kctoxk_FK on xk (
 kcdm ASC
 )
 go
@@ -526,10 +526,10 @@ create table xs (
    zzmmdm               char(2)              not null,
    bjdm                 char(2)              not null,
    xsxm                 varchar(50)          not null,
-   xb                   char(1)              not null default '1'
+   xb                   char(2)              not null default '男'
       constraint CKC_XB_XS check (xb in ('1','2')),
    nl                   char(2)              null,
-   csrq                 datetime             null,
+   csrq                 date	             null,
    jtzz                 varchar(100)         null,
    constraint PK_XS primary key nonclustered (xh)
 )
@@ -575,7 +575,7 @@ go
 create table xy (
    xydm                 char(2)              not null,
    xxdm                 char(3)              not null,
-   xymc                 char(2)              not null,
+   xymc                 varchar(50)          not null,
    constraint PK_XY primary key nonclustered (xydm)
 )
 go
@@ -653,13 +653,13 @@ alter table skap
 go
 
 alter table xk
-   add constraint FK_XK_XSXK_XS foreign key (xh)
-      references xs (xh)
+   add constraint FK_XK_KCTOXK_KC foreign key (kcdm)
+      references kc (kcdm)
 go
 
 alter table xk
-   add constraint FK_XK_课程TO选课_KC foreign key (kcdm)
-      references kc (kcdm)
+   add constraint FK_XK_XSXK_XS foreign key (xh)
+      references xs (xh)
 go
 
 alter table xs
