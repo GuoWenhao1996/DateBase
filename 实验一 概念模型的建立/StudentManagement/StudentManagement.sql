@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     2016/11/28 20:07:31                          */
+/* Created on:     2016/12/1 22:24:08                           */
 /*==============================================================*/
 
 
@@ -23,6 +23,13 @@ if exists (select 1
    where r.fkeyid = object_id('jlgl') and o.name = 'FK_JLGL_XSTOJL_XS')
 alter table jlgl
    drop constraint FK_JLGL_XSTOJL_XS
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('kc') and o.name = 'FK_KC_XYTOKC_XY')
+alter table kc
+   drop constraint FK_KC_XYTOKC_XY
 go
 
 if exists (select 1
@@ -103,6 +110,20 @@ alter table zy
 go
 
 if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('zykc') and o.name = 'FK_ZYKC_KCTOZYKC_KC')
+alter table zykc
+   drop constraint FK_ZYKC_KCTOZYKC_KC
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('zykc') and o.name = 'FK_ZYKC_ZYTOZYKC_ZY')
+alter table zykc
+   drop constraint FK_ZYKC_ZYTOZYKC_ZY
+go
+
+if exists (select 1
             from  sysindexes
            where  id    = object_id('bj')
             and   name  = 'zytobj_FK'
@@ -155,6 +176,15 @@ if exists (select 1
            where  id = object_id('js')
             and   type = 'U')
    drop table js
+go
+
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('kc')
+            and   name  = 'xytokc_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index kc.xytokc_FK
 go
 
 if exists (select 1
@@ -327,6 +357,31 @@ if exists (select 1
 go
 
 if exists (select 1
+            from  sysindexes
+           where  id    = object_id('zykc')
+            and   name  = 'kctozykc_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index zykc.kctozykc_FK
+go
+
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('zykc')
+            and   name  = 'zytozykc_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index zykc.zytozykc_FK
+go
+
+if exists (select 1
+            from  sysobjects
+           where  id = object_id('zykc')
+            and   type = 'U')
+   drop table zykc
+go
+
+if exists (select 1
             from  sysobjects
            where  id = object_id('zzmm')
             and   type = 'U')
@@ -360,7 +415,7 @@ create table cfgl (
    xh                   char(12)             not null,
    cfsj                 date	             not null,
    cfnr                 varchar(200)         not null,
-   constraint PK_CFGL primary key nonclustered (cfdm, xh)
+   constraint PK_CFGL primary key nonclustered (cfdm)
 )
 go
 
@@ -380,7 +435,7 @@ create table jlgl (
    xh                   char(12)             not null,
    jlsj                 date	             not null,
    jlnr                 varchar(200)         not null,
-   constraint PK_JLGL primary key nonclustered (jldm,xh)
+   constraint PK_JLGL primary key nonclustered (jldm)
 )
 go
 
@@ -406,10 +461,19 @@ go
 /* Table: kc                                                    */
 /*==============================================================*/
 create table kc (
+   xydm                 char(2)              not null,
    kcdm                 char(10)             not null,
    kcmc                 varchar(60)          not null,
    xf                   numeric(4,2)         not null,
-   constraint PK_KC primary key nonclustered (kcdm)
+   constraint PK_KC primary key nonclustered (xydm, kcdm)
+)
+go
+
+/*==============================================================*/
+/* Index: xytokc_FK                                             */
+/*==============================================================*/
+create index xytokc_FK on kc (
+xydm ASC
 )
 go
 
@@ -465,11 +529,12 @@ go
 /* Table: skap                                                  */
 /*==============================================================*/
 create table skap (
+   xydm                 char(2)              not null,
    kcdm                 char(10)             not null,
    gh                   char(10)             not null,
    sksj                 varchar(40)          not null,
    skjs                 varchar(40)          not null,
-   constraint PK_SKAP primary key nonclustered (kcdm, gh)
+   constraint PK_SKAP primary key nonclustered (xydm, kcdm, gh)
 )
 go
 
@@ -485,6 +550,7 @@ go
 /* Index: kctoskap_FK                                           */
 /*==============================================================*/
 create index kctoskap_FK on skap (
+xydm ASC,
 kcdm ASC
 )
 go
@@ -493,11 +559,12 @@ go
 /* Table: xk                                                    */
 /*==============================================================*/
 create table xk (
+   xydm                 char(2)              not null,
    kcdm                 char(10)             not null,
    xh                   char(12)             not null,
    cj                   numeric(3,1)         null,
    bkcj                 numeric(3,1)         null,
-   constraint PK_XK primary key nonclustered (kcdm, xh)
+   constraint PK_XK primary key nonclustered (xydm, kcdm, xh)
 )
 go
 
@@ -513,6 +580,7 @@ go
 /* Index: kctoxk_FK                                             */
 /*==============================================================*/
 create index kctoxk_FK on xk (
+xydm ASC,
 kcdm ASC
 )
 go
@@ -526,11 +594,10 @@ create table xs (
    zzmmdm               char(2)              not null,
    bjdm                 char(2)              not null,
    xsxm                 varchar(50)          not null,
-   xb                   char(2)              not null default 'ÄĞ'
-      constraint CKC_XB_XS check (xb in ('1','2')),
+   xb                   char(2)              not null,
    nl                   char(2)              null,
    csrq                 date	             null,
-   jtzz                 varchar(100)         null,
+   xsjl                 varchar(1000)        null,
    constraint PK_XS primary key nonclustered (xh)
 )
 go
@@ -575,7 +642,7 @@ go
 create table xy (
    xydm                 char(2)              not null,
    xxdm                 char(3)              not null,
-   xymc                 varchar(50)          not null,
+   xymc                 char(50)             not null,
    constraint PK_XY primary key nonclustered (xydm)
 )
 go
@@ -608,6 +675,35 @@ xydm ASC
 go
 
 /*==============================================================*/
+/* Table: zykc                                                  */
+/*==============================================================*/
+create table zykc (
+   xydm                 char(2)              not null,
+   kcdm                 char(10)             not null,
+   zydm                 char(2)              not null,
+   xq                   smallint             not null,
+   constraint PK_ZYKC primary key nonclustered (xydm, kcdm, zydm)
+)
+go
+
+/*==============================================================*/
+/* Index: zytozykc_FK                                           */
+/*==============================================================*/
+create index zytozykc_FK on zykc (
+zydm ASC
+)
+go
+
+/*==============================================================*/
+/* Index: kctozykc_FK                                           */
+/*==============================================================*/
+create index kctozykc_FK on zykc (
+xydm ASC,
+kcdm ASC
+)
+go
+
+/*==============================================================*/
 /* Table: zzmm                                                  */
 /*==============================================================*/
 create table zzmm (
@@ -632,6 +728,11 @@ alter table jlgl
       references xs (xh)
 go
 
+alter table kc
+   add constraint FK_KC_XYTOKC_XY foreign key (xydm)
+      references xy (xydm)
+go
+
 alter table shgx
    add constraint FK_SHGX_QSCWTOSHG_QSCW foreign key (chdm)
       references qscw (chdm)
@@ -648,13 +749,13 @@ alter table skap
 go
 
 alter table skap
-   add constraint FK_SKAP_KCTOSKAP_KC foreign key (kcdm)
-      references kc (kcdm)
+   add constraint FK_SKAP_KCTOSKAP_KC foreign key (xydm, kcdm)
+      references kc (xydm, kcdm)
 go
 
 alter table xk
-   add constraint FK_XK_KCTOXK_KC foreign key (kcdm)
-      references kc (kcdm)
+   add constraint FK_XK_KCTOXK_KC foreign key (xydm, kcdm)
+      references kc (xydm, kcdm)
 go
 
 alter table xk
@@ -685,5 +786,15 @@ go
 alter table zy
    add constraint FK_ZY_XYTOZY_XY foreign key (xydm)
       references xy (xydm)
+go
+
+alter table zykc
+   add constraint FK_ZYKC_KCTOZYKC_KC foreign key (xydm, kcdm)
+      references kc (xydm, kcdm)
+go
+
+alter table zykc
+   add constraint FK_ZYKC_ZYTOZYKC_ZY foreign key (zydm)
+      references zy (zydm)
 go
 
