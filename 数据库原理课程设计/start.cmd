@@ -1,0 +1,3 @@
+cd classes
+
+java MainFrame
