@@ -16,6 +16,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
 import com.gwh.PersonalMoneyMS.Util.JiaMi;
 import com.gwh.PersonalMoneyMS.Util.ShiJian;
 
@@ -47,8 +48,8 @@ public class MainFrame extends JFrame {
 
 	public MainFrame() {
 		super("个人财务管理系统");
-		// DBHelper dbhelpr = new DBHelper();
-		// dbhelpr.TestConn();
+		 DBHelper dbhelpr = new DBHelper();
+		 dbhelpr.TestConn();
 		setSize(980, 540);
 		setResizable(false);
 		setLocationRelativeTo(null);
