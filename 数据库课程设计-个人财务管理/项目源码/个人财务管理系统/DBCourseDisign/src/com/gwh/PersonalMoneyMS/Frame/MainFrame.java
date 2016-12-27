@@ -7,10 +7,17 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -18,7 +25,6 @@ import javax.swing.UIManager;
 
 import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
 import com.gwh.PersonalMoneyMS.Util.JiaMi;
-import com.gwh.PersonalMoneyMS.Util.ShiJian;
 
 public class MainFrame extends JFrame {
 
@@ -35,8 +41,9 @@ public class MainFrame extends JFrame {
 	private JLabel lable_huanying = new JLabel("欢迎使用此个人财务管理系统，请登录！");
 	private JLabel lable_userName = new JLabel("用户名:");
 	private JLabel lable_passworld = new JLabel("密    码:");
+	private JLabel lable_passworldTiShi = new JLabel("");
 
-	private JTextField textfield_userName = new JTextField(15);
+	protected JTextField textfield_userName = new JTextField(15);
 	private JPasswordField textfield_passworld = new JPasswordField(15);
 	private JButton button_login = new JButton("登录");
 	private JButton button_register = new JButton("注册 ");
@@ -48,12 +55,11 @@ public class MainFrame extends JFrame {
 
 	public MainFrame() {
 		super("个人财务管理系统");
-		 DBHelper dbhelpr = new DBHelper();
-		 dbhelpr.TestConn();
+		DBHelper dbhelpr = new DBHelper();
+		dbhelpr.TestConn();
 		setSize(980, 540);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		myLayout();
 		myEventListener();
 		setVisible(true);
@@ -101,25 +107,27 @@ public class MainFrame extends JFrame {
 		button_login.setFont(new Font("Dialog", 0, 20));
 		button_register.setFont(new Font("Dialog", 0, 20));
 		button_exit.setFont(new Font("Dialog", 0, 20));
-		// textfield_passworld.
-		GridLayout grid = new GridLayout(4, 1);
+		GridLayout grid = new GridLayout(5, 1);
 		panel_info.setLayout(grid);
 		JPanel p1 = new JPanel();
 		JPanel p2 = new JPanel();
 		JPanel p3 = new JPanel();
 		JPanel p4 = new JPanel();
+		JPanel p5 = new JPanel();
 		p1.add(lable_huanying);
 		p2.add(lable_userName);
 		p3.add(lable_passworld);
 		p2.add(textfield_userName);
 		p3.add(textfield_passworld);
-		p4.add(button_login);
-		p4.add(button_register);
-		p4.add(button_exit);
+		p4.add(lable_passworldTiShi);
+		p5.add(button_login);
+		p5.add(button_register);
+		p5.add(button_exit);
 		panel_info.add(p1);
 		panel_info.add(p2);
 		panel_info.add(p3);
 		panel_info.add(p4);
+		panel_info.add(p5);
 		// BorderLayout border = new BorderLayout();
 		// this.setLayout(border);
 		add(panel_choose, BorderLayout.NORTH);
@@ -127,6 +135,12 @@ public class MainFrame extends JFrame {
 	}
 
 	private void myEventListener() {
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+				JOptionPane.showMessageDialog(null, "系统即将安全退出！", "消息", JOptionPane.INFORMATION_MESSAGE);
+				System.exit(0);
+            }
+        });
 		// 个人信息管理
 		button_grxx.addActionListener(new ActionListener() {
 			@Override
@@ -211,39 +225,50 @@ public class MainFrame extends JFrame {
 		button_zx.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// 关闭所有button
-				button_grxx.setEnabled(false);
-				button_szjl.setEnabled(false);
-				button_srmx.setEnabled(false);
-				button_zcmx.setEnabled(false);
-				button_zhyaq.setEnabled(false);
-				button_zx.setEnabled(false);
-				button_zx.setBackground(Color.GRAY);
-				// 隐藏5个panel
+				int n = JOptionPane.showConfirmDialog(null, "是否退出当前用户？", "提示", JOptionPane.YES_NO_OPTION);
+				if (n == 0) {
+					// 关闭所有button
+					button_grxx.setEnabled(false);
+					button_szjl.setEnabled(false);
+					button_srmx.setEnabled(false);
+					button_zcmx.setEnabled(false);
+					button_zhyaq.setEnabled(false);
+					button_zx.setEnabled(false);
+					button_zx.setBackground(Color.GRAY);
+					// 隐藏5个panel
 
-				// 添加登录Panel
-				panel_info.setVisible(true);
-
+					// 添加登录Panel
+					panel_info.setVisible(true);
+				}
 			}
 		});
 		button_login.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// 验证登录
-				if (login()) {
-					// 打开6个button
-					button_grxx.setEnabled(true);
-					button_szjl.setEnabled(true);
-					button_srmx.setEnabled(true);
-					button_zcmx.setEnabled(true);
-					button_zhyaq.setEnabled(true);
-					button_zx.setEnabled(true);
-					button_zx.setBackground(new Color(232, 17, 35));
-					// 隐藏登录页
-					panel_info.setVisible(true);
-
+				if (textfield_userName.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "请输入用户名！", "消息", JOptionPane.WARNING_MESSAGE);
+				} else if (textfield_passworld.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "请输入密码！", "消息", JOptionPane.WARNING_MESSAGE);
 				} else {
-
+					// 验证登录
+					if (login()) {
+						JOptionPane.showMessageDialog(null, "登录成功！", "消息", JOptionPane.INFORMATION_MESSAGE);
+						// 清空密码框与密码提示框
+						textfield_passworld.setText("");
+						lable_passworldTiShi.setText("");
+						// 打开6个button
+						button_grxx.setEnabled(true);
+						button_szjl.setEnabled(true);
+						button_srmx.setEnabled(true);
+						button_zcmx.setEnabled(true);
+						button_zhyaq.setEnabled(true);
+						button_zx.setEnabled(true);
+						button_zx.setBackground(new Color(232, 17, 35));
+						// 隐藏登录页
+						panel_info.setVisible(false);
+					} else {
+						JOptionPane.showMessageDialog(null, "登录失败！\n用户名或密码错误！", "消息", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -251,23 +276,63 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Register r = new Register();
-                r.setVisible(true);
-                mf.setVisible(false);
+				r.setVisible(true);
+				mf.setVisible(false);
+			}
+		});
+		button_exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int n = JOptionPane.showConfirmDialog(null, "是否退出系统？", "提示", JOptionPane.YES_NO_OPTION);
+				if (n == 0)
+					System.exit(0);
 			}
 		});
 
 	}
 
 	private boolean login() {
-		USERNAME = textfield_userName.getText();
+		DBHelper help = new DBHelper();
+		Connection dbConn = null;
+		Statement dbState = null;
+		ResultSet dbRs = null;
+
+		String sql = null;
 		String PASSWORLD = "";
-		PASSWORLD = JiaMi.getMD5(USERNAME);
-		textfield_passworld.setText(PASSWORLD);
-		textfield_userName.setText(ShiJian.getTime());
-		if (textfield_passworld.equals("123"))
-			return true;
-		else
+
+		USERNAME = textfield_userName.getText();
+		PASSWORLD = JiaMi.getMD5(textfield_passworld.getText());
+
+		// 查询user表
+		try {
+			dbConn = help.GetConnection();
+			dbState = dbConn.createStatement();
+			sql = "select * from T_User where userName='" + USERNAME + "' and userPwd='" + PASSWORLD + "'";
+			dbRs = dbState.executeQuery(sql);
+			if (dbRs.next()) {
+				dbRs.close();
+				dbState.close();
+				help.Close();
+				return true;
+			} else {
+				sql = "select userPwdTiShi from T_User where userName='" + USERNAME + "'";
+				 dbRs = dbState.executeQuery(sql);
+		            if (dbRs.next()) {
+						lable_passworldTiShi.setText("密码提示:"+dbRs.getString(1));
+		            }
+		            else{
+						lable_passworldTiShi.setText("密码提示:");
+		            }		           
+		        dbRs.close();
+				dbRs.close();
+				dbState.close();
+				help.Close();
+				return false;
+			}
+		} catch (SQLException ex) {
+			System.err.println(ex.getMessage());
 			return false;
+		}
 	}
 
 	private static void setLookAndFeel() {

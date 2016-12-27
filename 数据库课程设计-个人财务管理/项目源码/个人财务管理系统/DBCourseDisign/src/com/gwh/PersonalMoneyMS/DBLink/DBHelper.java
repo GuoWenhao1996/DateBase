@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DBHelper {
 
     Connection dbConn = null;
-    String DBName = "Link_DB_Student_631406010109";
+    String DBName = "PersonalMoneyDB";
 
     public Connection OpenConn(String sUser, String sPwd) {
         try {
