@@ -12,8 +12,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+
+import com.gwh.PersonalMoneyMS.Util.JiaMi;
+import com.gwh.PersonalMoneyMS.Util.ShiJian;
 
 public class MainFrame extends JFrame {
 
@@ -30,8 +34,9 @@ public class MainFrame extends JFrame {
 	private JLabel lable_huanying = new JLabel("欢迎使用此个人财务管理系统，请登录！");
 	private JLabel lable_userName = new JLabel("用户名:");
 	private JLabel lable_passworld = new JLabel("密    码:");
-	private JTextField textfield_userName = new JTextField(10);
-	private JTextField textfield_passworld = new JTextField(10);
+
+	private JTextField textfield_userName = new JTextField(15);
+	private JPasswordField textfield_passworld = new JPasswordField(15);
 	private JButton button_login = new JButton("登录");
 	private JButton button_register = new JButton("注册 ");
 	private JButton button_exit = new JButton("退出");
@@ -85,12 +90,13 @@ public class MainFrame extends JFrame {
 		panel_choose.add(button_zcmx);
 		panel_choose.add(button_zhyaq);
 		panel_choose.add(button_zx);
-		
+
 		lable_huanying.setFont(new Font("Dialog", 0, 30));
 		lable_userName.setFont(new Font("Dialog", 0, 20));
 		lable_passworld.setFont(new Font("Dialog", 0, 20));
 		textfield_userName.setFont(new Font("Dialog", 0, 20));
 		textfield_passworld.setFont(new Font("Dialog", 0, 20));
+		textfield_passworld.setEchoChar('*');
 		button_login.setFont(new Font("Dialog", 0, 20));
 		button_register.setFont(new Font("Dialog", 0, 20));
 		button_exit.setFont(new Font("Dialog", 0, 20));
@@ -231,13 +237,21 @@ public class MainFrame extends JFrame {
 					button_zcmx.setEnabled(true);
 					button_zhyaq.setEnabled(true);
 					button_zx.setEnabled(true);
-					button_zx.setBackground(new Color(232,17,35));
+					button_zx.setBackground(new Color(232, 17, 35));
 					// 隐藏登录页
-					panel_info.setVisible(false);
+					panel_info.setVisible(true);
 
 				} else {
 
 				}
+			}
+		});
+		button_register.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Register r = new Register();
+                r.setVisible(true);
+                mf.setVisible(false);
 			}
 		});
 
@@ -246,8 +260,10 @@ public class MainFrame extends JFrame {
 	private boolean login() {
 		USERNAME = textfield_userName.getText();
 		String PASSWORLD = "";
-
-		if (textfield_passworld.getText().equals(PASSWORLD))
+		PASSWORLD = JiaMi.getMD5(USERNAME);
+		textfield_passworld.setText(PASSWORLD);
+		textfield_userName.setText(ShiJian.getTime());
+		if (textfield_passworld.equals("123"))
 			return true;
 		else
 			return false;
@@ -263,7 +279,7 @@ public class MainFrame extends JFrame {
 
 	public static void main(String[] args) {
 		setLookAndFeel();
-		//MainFrame mf=new MainFrame();
+		// MainFrame mf=new MainFrame();
 		mf.setVisible(true);
 	}
 }
