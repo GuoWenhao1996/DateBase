@@ -57,13 +57,16 @@ public class MainFrame extends JFrame {
 	private JPanel panel_Login = new JPanel();
 
 	Panel_zhyaq p_zhyaq = new Panel_zhyaq();
-
+	Panel_szjl p_szjl = new Panel_szjl();
+	Panel_srxq p_srxq = new Panel_srxq();
+	Panel_zcxq p_zcxq=new Panel_zcxq();
+	
 	public MainFrame() {
 		super("个人财务管理系统");
 		DBHelper dbhelpr = new DBHelper();
 		dbhelpr.TestConn();
-		setSize(980, 580);
-		//setResizable(false);
+		setSize(980, 600);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		myLayout();
 		myEventListener();
@@ -163,7 +166,9 @@ public class MainFrame extends JFrame {
 				button_zhyaq.setEnabled(true);
 				// 隐藏其余4个panel
 				p_zhyaq.p.setVisible(false);
-
+				p_szjl.p.setVisible(false);
+				p_srxq.p.setVisible(false);
+				p_zcxq.p.setVisible(false);
 				// 添加个人信息管理Panel
 
 			}
@@ -180,9 +185,13 @@ public class MainFrame extends JFrame {
 				button_zhyaq.setEnabled(true);
 				// 隐藏其余4个panel
 				p_zhyaq.p.setVisible(false);
+				p_srxq.p.setVisible(false);
+				p_zcxq.p.setVisible(false);
 
 				// 添加收支记录管理Panel
-
+				p_szjl = new Panel_szjl();
+				panel_info.add(p_szjl.p);
+				setVisible(true);
 			}
 		});
 		// 收入明细管理
@@ -197,9 +206,13 @@ public class MainFrame extends JFrame {
 				button_zhyaq.setEnabled(true);
 				// 隐藏其余4个panel
 				p_zhyaq.p.setVisible(false);
+				p_szjl.p.setVisible(false);
+				p_zcxq.p.setVisible(false);
 
 				// 添加收入明细管理Panel
-
+				p_srxq = new Panel_srxq();
+				panel_info.add(p_srxq.p);
+				setVisible(true);
 			}
 		});
 		// 支出明细管理
@@ -214,9 +227,13 @@ public class MainFrame extends JFrame {
 				button_zhyaq.setEnabled(true);
 				// 隐藏其余4个panel
 				p_zhyaq.p.setVisible(false);
+				p_szjl.p.setVisible(false);
+				p_srxq.p.setVisible(false);
 
 				// 添加支出明细管理Panel
-
+				p_zcxq = new Panel_zcxq();
+				panel_info.add(p_zcxq.p);
+				setVisible(true);
 			}
 		});
 		// 账户与安全管理
@@ -230,6 +247,9 @@ public class MainFrame extends JFrame {
 				button_zcmx.setEnabled(true);
 				button_zhyaq.setEnabled(false);
 				// 隐藏其余4个panel
+				p_szjl.p.setVisible(false);
+				p_srxq.p.setVisible(false);
+				p_zcxq.p.setVisible(false);
 
 				// 添加账户与安全管理Panel
 				p_zhyaq = new Panel_zhyaq();
@@ -253,6 +273,10 @@ public class MainFrame extends JFrame {
 					button_zx.setBackground(Color.GRAY);
 					// 隐藏5个panel
 					p_zhyaq.p.setVisible(false);
+					p_szjl.p.setVisible(false);
+					p_srxq.p.setVisible(false);
+					p_zcxq.p.setVisible(false);
+
 					// 添加登录Panel
 					panel_Login.setVisible(true);
 				}
@@ -314,16 +338,14 @@ public class MainFrame extends JFrame {
 		Connection dbConn = null;
 		Statement dbState = null;
 		ResultSet dbRs = null;
-		String sql = null;	
-		int index=getIndex();
+		String sql = null;
+		int index = getIndex();
 		index++;
 		// 查询userLogin表
 		try {
 			dbConn = help.GetConnection();
 			dbState = dbConn.createStatement();
-			sql = "insert into T_userLogin values('"+USERNAME+"', "
-													  +index+" ,'"
-													  +ShiJian.getTime()+"')";
+			sql = "insert into T_userLogin values('" + USERNAME + "', " + index + " ,'" + ShiJian.getTime() + "')";
 			dbState.executeUpdate(sql);
 			dbState.close();
 			help.Close();
@@ -331,13 +353,14 @@ public class MainFrame extends JFrame {
 			System.err.println(ex.getMessage());
 		}
 	}
-	private int getIndex(){
+
+	private int getIndex() {
 		DBHelper help = new DBHelper();
 		Connection dbConn = null;
 		Statement dbState = null;
 		ResultSet dbRs = null;
-		String sql = null;	
-		int index=0;
+		String sql = null;
+		int index = 0;
 		// 查询userLogin表
 		try {
 			dbConn = help.GetConnection();
@@ -345,7 +368,7 @@ public class MainFrame extends JFrame {
 			sql = "select loginIndex from T_userLogin where userName='" + USERNAME + "'";
 			dbRs = dbState.executeQuery(sql);
 			while (dbRs.next()) {
-				index=Integer.parseInt(dbRs.getString(1));
+				index = Integer.parseInt(dbRs.getString(1));
 			}
 			dbRs.close();
 			dbState.close();
@@ -356,12 +379,13 @@ public class MainFrame extends JFrame {
 			return 0;
 		}
 	}
+
 	private boolean login() {
 		DBHelper help = new DBHelper();
 		Connection dbConn = null;
 		Statement dbState = null;
 		ResultSet dbRs = null;
-		
+
 		String sql = null;
 		String PASSWORLD = "";
 
