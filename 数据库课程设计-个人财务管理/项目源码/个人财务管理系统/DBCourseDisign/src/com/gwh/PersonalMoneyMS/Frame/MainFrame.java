@@ -39,7 +39,8 @@ public class MainFrame extends JFrame {
 	private JButton button_zhyaq = new JButton("   账户与安全   ");
 	private JButton button_zx = new JButton("注销");
 
-	private JLabel lable_huanying = new JLabel("欢迎使用此个人财务管理系统，请登录！\n\n\n");
+	private JLabel lable_huanying = new JLabel("欢迎使用此个人财务管理系统，请登录！");
+	private JLabel lable_zhanwei = new JLabel("     ");
 	private JLabel lable_userName = new JLabel("用户名:");
 	private JLabel lable_passworld = new JLabel("密    码:");
 	private JLabel lable_passworldTiShi = new JLabel("");
@@ -103,6 +104,7 @@ public class MainFrame extends JFrame {
 		panel_choose.add(button_zx);
 
 		lable_huanying.setFont(new Font("Dialog", 0, 30));
+		lable_zhanwei.setFont(new Font("Dialog", 0, 50));
 		lable_userName.setFont(new Font("Dialog", 0, 20));
 		lable_passworld.setFont(new Font("Dialog", 0, 20));
 		textfield_userName.setFont(new Font("Dialog", 0, 20));
@@ -111,14 +113,16 @@ public class MainFrame extends JFrame {
 		button_login.setFont(new Font("Dialog", 0, 20));
 		button_register.setFont(new Font("Dialog", 0, 20));
 		button_exit.setFont(new Font("Dialog", 0, 20));
-		GridLayout grid = new GridLayout(5, 1);
+		GridLayout grid = new GridLayout(6, 1);
 		panel_Login.setLayout(grid);
 		JPanel p1 = new JPanel();
+		JPanel p1_1 = new JPanel();
 		JPanel p2 = new JPanel();
 		JPanel p3 = new JPanel();
 		JPanel p4 = new JPanel();
 		JPanel p5 = new JPanel();
 		p1.add(lable_huanying);
+		p1_1.add(lable_zhanwei);
 		p2.add(lable_userName);
 		p3.add(lable_passworld);
 		p2.add(textfield_userName);
@@ -127,6 +131,7 @@ public class MainFrame extends JFrame {
 		p5.add(button_login);
 		p5.add(button_register);
 		p5.add(button_exit);
+		panel_Login.add(p1_1);
 		panel_Login.add(p1);
 		panel_Login.add(p2);
 		panel_Login.add(p3);

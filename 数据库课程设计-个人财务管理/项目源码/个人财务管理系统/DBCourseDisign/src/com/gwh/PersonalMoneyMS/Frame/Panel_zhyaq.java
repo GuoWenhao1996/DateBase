@@ -47,6 +47,7 @@ public class Panel_zhyaq extends JPanel {
 		Information("select loginIndex,loginTime from T_UserLogin where userName='" + MainFrame.USERNAME + "'");
 		myEventListener();
 		BoxLayout horizontal = new BoxLayout(p, BoxLayout.Y_AXIS);
+		lable.setFont(new Font("Dialog", 0, 30));
 		p.setLayout(horizontal);
 		p1.add(lable_rq);
 		p1.add(textfield_rq1);
