@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +26,9 @@ import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
 
 public class Panel_szjl extends JPanel {
 
+	private BigDecimal money_sum = new BigDecimal(Double.toString(0));
+	private String money = null;
+
 	private JTable table = new JTable();
 	private JScrollPane scrollpane = null;
 	private Vector rowData = new Vector();
@@ -36,6 +40,10 @@ public class Panel_szjl extends JPanel {
 	private JTextField textfield_rq1 = new JTextField(10);
 	private JTextField textfield_rq2 = new JTextField(10);
 
+	private JLabel lable_zje = new JLabel("净收入：");
+	private JLabel lable_sum = new JLabel("");
+	private JLabel lable_yuan = new JLabel(" 元");
+
 	private JButton button_zengjia = new JButton("增加记录");
 	private JButton button_shanchu = new JButton("删除记录");
 	private JButton button_xiugai = new JButton("修改记录");
@@ -44,6 +52,7 @@ public class Panel_szjl extends JPanel {
 	private JPanel p1 = new JPanel();
 	private JPanel p2 = new JPanel();
 	private JPanel p3 = new JPanel();
+	private JPanel p4 = new JPanel();
 
 	protected Panel_szjl() {
 		Information("select ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='" + MainFrame.USERNAME
@@ -52,6 +61,9 @@ public class Panel_szjl extends JPanel {
 		myEventListener();
 		BoxLayout horizontal = new BoxLayout(p, BoxLayout.Y_AXIS);
 		lable.setFont(new Font("Dialog", 0, 30));
+		lable_zje.setFont(new Font("Dialog", 0, 30));
+		lable_sum.setFont(new Font("Dialog", 0, 30));
+		lable_yuan.setFont(new Font("Dialog", 0, 30));
 		p.setLayout(horizontal);
 		p1.add(lable_rq);
 		p1.add(textfield_rq1);
@@ -59,12 +71,16 @@ public class Panel_szjl extends JPanel {
 		p1.add(textfield_rq2);
 		p1.add(button_chaxun);
 		p2.add(scrollpane);
-		p3.add(button_zengjia);
-		p3.add(button_shanchu);
-		p3.add(button_xiugai);
+		p3.add(lable_zje);
+		p3.add(lable_sum);
+		p3.add(lable_yuan);
+		p4.add(button_zengjia);
+		p4.add(button_shanchu);
+		p4.add(button_xiugai);
 		p.add(p1);
 		p.add(p2);
 		p.add(p3);
+		p.add(p4);
 	}
 
 	private void Information(String sql) {
@@ -81,14 +97,19 @@ public class Panel_szjl extends JPanel {
 			dbConn = dbhelpr.GetConnection();
 			dbState = dbConn.createStatement();
 			dbRs = dbState.executeQuery(sql);
+			money_sum = new BigDecimal(Double.toString(0));
 			while (dbRs.next()) {
 				Vector vNext = new Vector();
 				vNext.add(dbRs.getString("ShouRuTime"));
-				vNext.add(dbRs.getString("ShouRuMoney"));
+				money = dbRs.getString("ShouRuMoney");
+				vNext.add(money);
+				money_sum = money_sum.add(BigDecimal.valueOf(Double.parseDouble(money)));
 				vNext.add(dbRs.getString("ShouRuInfo"));
 				rowData.add(vNext);
 			}
 			table = new JTable(rowData, columName);// 数据加到表格中
+			money_sum = money_sum.setScale(2, BigDecimal.ROUND_HALF_UP);
+			lable_sum.setText(money_sum.toString());
 			dbRs.close();
 			dbState.close();
 			dbhelpr.Close();
@@ -117,7 +138,7 @@ public class Panel_szjl extends JPanel {
 		renderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
 		table.setDefaultRenderer(Object.class, renderer);
 
-		table.setPreferredScrollableViewportSize(new Dimension(700, 350));
+		table.setPreferredScrollableViewportSize(new Dimension(700, 320));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 		scrollpane = new JScrollPane(table);
 	}
@@ -150,11 +171,27 @@ public class Panel_szjl extends JPanel {
 		button_zengjia.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				Object[] options = { "收入记录", "支出记录", "取消" };
+				int m = JOptionPane.showOptionDialog(null, "请问您要添加收入记录还是支出记录：", "提示", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				if(m==0){
+					AddShouRu asr = new AddShouRu();
+					asr.setVisible(true);
+					MainFrame.mf.setVisible(false);
+				}
+				else if(m==1){
+					AddZhiChu azc = new AddZhiChu();
+					azc.setVisible(true);
+					MainFrame.mf.setVisible(false);
+				}
+				else{
+					//什么都不做
+				}
 			}
 		});
 		// 删除事件监听
 		button_chaxun.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 

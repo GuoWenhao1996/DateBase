@@ -39,7 +39,7 @@ public class Panel_zcxq extends JPanel {
 	private JLabel lable = new JLabel("~");
 	private JTextField textfield_rq1 = new JTextField(10);
 	private JTextField textfield_rq2 = new JTextField(10);
-	private JLabel lable_zje = new JLabel("总金额：");
+	private JLabel lable_zje = new JLabel("总支出：");
 	private JLabel lable_sum = new JLabel("");
 	private JLabel lable_yuan = new JLabel(" 元");
 

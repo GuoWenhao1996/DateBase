@@ -36,7 +36,7 @@ public class Panel_zhyaq extends JPanel {
 	private JTextField textfield_rq1 = new JTextField(10);
 	private JTextField textfield_rq2 = new JTextField(10);
 
-	private JButton button_xiugai = new JButton("修改密码");
+	private JButton button_xiugai = new JButton("有异常登录？修改密码！");
 
 	protected JPanel p = new JPanel();
 	private JPanel p1 = new JPanel();
