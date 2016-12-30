@@ -59,14 +59,14 @@ public class MainFrame extends JFrame {
 	Panel_zhyaq p_zhyaq = new Panel_zhyaq();
 	Panel_szjl p_szjl = new Panel_szjl();
 	Panel_srxq p_srxq = new Panel_srxq();
-	Panel_zcxq p_zcxq=new Panel_zcxq();
-	
+	Panel_zcxq p_zcxq = new Panel_zcxq();
+
 	public MainFrame() {
 		super("个人财务管理系统");
 		DBHelper dbhelpr = new DBHelper();
 		dbhelpr.TestConn();
 		setSize(980, 600);
-		setResizable(false);
+		// setResizable(false);
 		setLocationRelativeTo(null);
 		myLayout();
 		myEventListener();
@@ -352,6 +352,13 @@ public class MainFrame extends JFrame {
 		} catch (SQLException ex) {
 			System.err.println(ex.getMessage());
 		}
+	}
+
+	protected void reshowPanel_szjl() {
+		p_szjl.p.setVisible(false);
+		p_szjl = new Panel_szjl();
+		panel_info.add(p_szjl.p);
+		p_szjl.p.setVisible(true);
 	}
 
 	private int getIndex() {

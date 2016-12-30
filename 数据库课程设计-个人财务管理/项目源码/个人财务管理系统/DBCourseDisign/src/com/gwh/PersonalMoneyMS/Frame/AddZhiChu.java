@@ -127,6 +127,7 @@ public class AddZhiChu extends JFrame {
 						help.Close();
 						JOptionPane.showMessageDialog(null, "提交成功！", "消息", JOptionPane.INFORMATION_MESSAGE);
 						setVisible(false);
+						MainFrame.mf.reshowPanel_szjl();
 						MainFrame.mf.setVisible(true);
 					} catch (Exception ex) {
 						System.err.println(ex.getMessage());

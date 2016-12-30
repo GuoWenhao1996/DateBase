@@ -83,7 +83,7 @@ public class Panel_szjl extends JPanel {
 		p.add(p4);
 	}
 
-	private void Information(String sql) {
+	protected void Information(String sql) {
 		Connection dbConn = null;
 		Statement dbState = null;
 		ResultSet dbRs = null;
