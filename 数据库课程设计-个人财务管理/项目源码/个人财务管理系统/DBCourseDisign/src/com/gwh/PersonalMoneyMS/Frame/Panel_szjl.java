@@ -30,15 +30,15 @@ public class Panel_szjl extends JPanel {
 	private String money = null;
 
 	private JTable table = new JTable();
-	private JScrollPane scrollpane = null;
+	private JScrollPane scrollpane = new JScrollPane();
 	private Vector rowData = new Vector();
 	private Vector columName = new Vector();
 
 	private JButton button_chaxun = new JButton("查询");
 	private JLabel lable_rq = new JLabel("日期:");
 	private JLabel lable = new JLabel("~");
-	private JTextField textfield_rq1 = new JTextField(10);
-	private JTextField textfield_rq2 = new JTextField(10);
+	private JTextField textfield_rq1 = new JTextField(11);
+	private JTextField textfield_rq2 = new JTextField(11);
 
 	private JLabel lable_zje = new JLabel("净收入：");
 	private JLabel lable_sum = new JLabel("");
@@ -89,6 +89,7 @@ public class Panel_szjl extends JPanel {
 		ResultSet dbRs = null;
 		DBHelper dbhelpr = new DBHelper();
 		rowData.clear();
+		columName.clear();
 		columName.add("日期");
 		columName.add("金额");
 		columName.add("详情");
@@ -140,7 +141,7 @@ public class Panel_szjl extends JPanel {
 
 		table.setPreferredScrollableViewportSize(new Dimension(700, 320));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-		scrollpane = new JScrollPane(table);
+		scrollpane.setViewportView(table);
 	}
 
 	private void myEventListener() {
@@ -174,27 +175,29 @@ public class Panel_szjl extends JPanel {
 				Object[] options = { "收入记录", "支出记录", "取消" };
 				int m = JOptionPane.showOptionDialog(null, "请问您要添加收入记录还是支出记录：", "提示", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-				if(m==0){
+				if (m == 0) {
 					AddShouRu asr = new AddShouRu();
 					asr.setVisible(true);
 					MainFrame.mf.setVisible(false);
-				}
-				else if(m==1){
+				} else if (m == 1) {
 					AddZhiChu azc = new AddZhiChu();
 					azc.setVisible(true);
 					MainFrame.mf.setVisible(false);
-				}
-				else{
-					//什么都不做
+				} else {
+					// 什么都不做
 				}
 			}
 		});
 		// 删除事件监听
-		button_chaxun.addActionListener(new ActionListener() {
-
+		button_shanchu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				System.out.println("删除了");
+				int[] selectRows = table.getSelectedRows();
+				System.out.println("选中了："+selectRows.length+" 行");
+				for (int i = 0; i < selectRows.length; i++) {
+					System.out.println(selectRows[i] + " ");
+				}
 			}
 		});
 		// 修改事件监听

@@ -66,7 +66,7 @@ public class MainFrame extends JFrame {
 		DBHelper dbhelpr = new DBHelper();
 		dbhelpr.TestConn();
 		setSize(980, 600);
-		// setResizable(false);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		myLayout();
 		myEventListener();

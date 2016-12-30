@@ -30,15 +30,15 @@ public class Panel_srxq extends JPanel {
 	private String money= null;
 
 	private JTable table = new JTable();
-	private JScrollPane scrollpane = null;
+	private JScrollPane scrollpane = new JScrollPane();
 	private Vector rowData = new Vector();
 	private Vector columName = new Vector();
 
 	private JButton button_chaxun = new JButton("查询");
 	private JLabel lable_rq = new JLabel("日期:");
 	private JLabel lable = new JLabel("~");
-	private JTextField textfield_rq1 = new JTextField(10);
-	private JTextField textfield_rq2 = new JTextField(10);
+	private JTextField textfield_rq1 = new JTextField(11);
+	private JTextField textfield_rq2 = new JTextField(11);
 	
 	private JLabel lable_zje = new JLabel("总收入：");
 	private JLabel lable_sum = new JLabel("");
@@ -80,6 +80,7 @@ public class Panel_srxq extends JPanel {
 		ResultSet dbRs = null;
 		DBHelper dbhelpr = new DBHelper();
 		rowData.clear();
+		columName.clear();
 		columName.add("日期");
 		columName.add("金额");
 		columName.add("详情");
@@ -114,7 +115,6 @@ public class Panel_srxq extends JPanel {
 				JOptionPane.showMessageDialog(null, "查询失败！\n" + ex.getMessage(), "消息", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-
 		table.setFont(new Font("Dialog", 0, 15));
 
 		TableColumn column = null;
@@ -131,7 +131,7 @@ public class Panel_srxq extends JPanel {
 
 		table.setPreferredScrollableViewportSize(new Dimension(700, 350));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-		scrollpane = new JScrollPane(table);
+		scrollpane.setViewportView(table);
 	}
 
 	private void myEventListener() {
