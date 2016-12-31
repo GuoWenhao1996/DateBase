@@ -16,3 +16,9 @@ select ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu where userName='郭大神'
 	order by ShouRuTime
 
 insert into T_ShouRu values('郭大神','2016-12-29 13:11:46',999.99,'测试增加收入')	
+
+ShouRuIndex
+ZhiChuIndex
+select ShouRuIndex,ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu where userName='郭大神' 
+	union select ZhiChuIndex,ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu where userName='郭大神' 
+	order by ShouRuTime

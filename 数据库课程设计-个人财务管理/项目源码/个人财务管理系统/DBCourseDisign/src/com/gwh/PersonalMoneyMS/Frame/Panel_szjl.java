@@ -25,10 +25,10 @@ import javax.swing.table.TableColumn;
 import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
 
 public class Panel_szjl extends JPanel {
-
+	private int MAXINDEX=999999;
 	private BigDecimal money_sum = new BigDecimal(Double.toString(0));
 	private String money = null;
-
+	private int[] index=new int[MAXINDEX];
 	private JTable table = new JTable();
 	private JScrollPane scrollpane = new JScrollPane();
 	private Vector rowData = new Vector();
@@ -55,8 +55,8 @@ public class Panel_szjl extends JPanel {
 	private JPanel p4 = new JPanel();
 
 	protected Panel_szjl() {
-		Information("select ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='" + MainFrame.USERNAME
-				+ "' " + "union select ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
+		Information("select ShouRuIndex,ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='" + MainFrame.USERNAME
+				+ "' " + "union select ZhiChuIndex,ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
 				+ "where userName='" + MainFrame.USERNAME + "' " + "order by ShouRuTime");
 		myEventListener();
 		BoxLayout horizontal = new BoxLayout(p, BoxLayout.Y_AXIS);
@@ -88,6 +88,7 @@ public class Panel_szjl extends JPanel {
 		Statement dbState = null;
 		ResultSet dbRs = null;
 		DBHelper dbhelpr = new DBHelper();
+		int szindex=0;
 		rowData.clear();
 		columName.clear();
 		columName.add("日期");
@@ -100,6 +101,10 @@ public class Panel_szjl extends JPanel {
 			dbRs = dbState.executeQuery(sql);
 			money_sum = new BigDecimal(Double.toString(0));
 			while (dbRs.next()) {
+				index[szindex]=dbRs.getInt("ShouRuIndex");
+				szindex++;
+				if(szindex==MAXINDEX)
+					szindex=0;
 				Vector vNext = new Vector();
 				vNext.add(dbRs.getString("ShouRuTime"));
 				money = dbRs.getString("ShouRuMoney");
@@ -157,10 +162,10 @@ public class Panel_szjl extends JPanel {
 				if (textfield_rq2.getText().equals("")) {
 					_rq2 = "9999-12-31";
 				}
-				Information("select ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='"
+				Information("select ShouRuIndex,ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='"
 						+ MainFrame.USERNAME + "' and ShouRuTime between '" + _rq1 + "' and '" + _rq2 + "'"
 						+ "or ShouRuTime between '" + _rq2 + "' and '" + _rq1 + "'"
-						+ "union select ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
+						+ "union select ZhiChuIndex,ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
 						+ "where userName='" + MainFrame.USERNAME + "' and ZhiChuTime between '" + _rq1 + "' and '"
 						+ _rq2 + "'" + "or ZhiChuTime between '" + _rq2 + "' and '" + _rq1 + "'"
 						+ "order by ShouRuTime");
@@ -192,10 +197,10 @@ public class Panel_szjl extends JPanel {
 		button_shanchu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("删除了");
 				int[] selectRows = table.getSelectedRows();
 				System.out.println("选中了："+selectRows.length+" 行");
 				for (int i = 0; i < selectRows.length; i++) {
+					System.out.print("id="+index[selectRows[i]]+"  ");
 					System.out.println(selectRows[i] + " ");
 				}
 			}
