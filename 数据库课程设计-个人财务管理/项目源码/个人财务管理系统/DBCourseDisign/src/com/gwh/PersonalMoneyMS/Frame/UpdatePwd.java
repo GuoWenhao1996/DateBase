@@ -59,7 +59,6 @@ public class UpdatePwd extends JFrame {
 		textfield_oldPwd.setFont(new Font("Dialog", 0, 20));
 		textfield_pwd1.setFont(new Font("Dialog", 0, 20));
 		textfield_pwd2.setFont(new Font("Dialog", 0, 20));
-		textfield_pwd1.setFont(new Font("Dialog", 0, 20));
 		textfield_pwdTiShi.setFont(new Font("Dialog", 0, 20));
 		button_tijiao.setFont(new Font("Dialog", 0, 20));
 		button_qingkong.setFont(new Font("Dialog", 0, 20));

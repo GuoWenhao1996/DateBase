@@ -21,11 +21,12 @@ import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
 import com.gwh.PersonalMoneyMS.Util.JiaMi;
 import com.gwh.PersonalMoneyMS.Util.ShiJian;
 
-public class AddShouRu extends JFrame {
+public class UpdateZhiChu extends JFrame {
 
+	private int index = 0;
 	private JLabel lable_zhanwei = new JLabel("     ");
 	private JLabel lable_time = new JLabel("时       间：");
-	private JLabel lable_money = new JLabel("收入 (元)：");
+	private JLabel lable_money = new JLabel("支出 (元)：");
 	private JLabel lable_info = new JLabel("备       注：");
 
 	private JTextField textfield_time = new JTextField(14);
@@ -45,8 +46,9 @@ public class AddShouRu extends JFrame {
 	private JPanel p3 = new JPanel();
 	private JPanel p4 = new JPanel();
 
-	public AddShouRu() {
-		super("添加收入信息");
+	public UpdateZhiChu(String str1, String str2, String str3, int i) {
+		super("修改支出信息");
+		index = i;
 		setSize(550, 350);
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -63,6 +65,9 @@ public class AddShouRu extends JFrame {
 		button_tijiao.setFont(new Font("Dialog", 0, 20));
 		button_qingkong.setFont(new Font("Dialog", 0, 20));
 		button_guanbi.setFont(new Font("Dialog", 0, 20));
+		textfield_time.setText(str1);
+		textfield_money.setText(str2);
+		textfield_info.setText(str3);
 		p0.add(lable_zhanwei);
 		p1_1.add(button_gettime);
 		p1.add(lable_time);
@@ -108,9 +113,9 @@ public class AddShouRu extends JFrame {
 					if (textfield_time.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "请输入时间！", "消息", JOptionPane.WARNING_MESSAGE);
 					} else if (textfield_money.getText().isEmpty()) {
-						JOptionPane.showMessageDialog(null, "请输入收入金额！", "消息", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "请输入支出金额！", "消息", JOptionPane.WARNING_MESSAGE);
 					} else if (Double.parseDouble(textfield_money.getText()) == 0) {
-						JOptionPane.showMessageDialog(null, "收入0元就不存了吧，没必要！", "消息", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "支出0元就不存了吧，没必要！", "消息", JOptionPane.WARNING_MESSAGE);
 					} else if (textfield_info.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "请输入备注！", "消息", JOptionPane.WARNING_MESSAGE);
 					} else {
@@ -119,14 +124,13 @@ public class AddShouRu extends JFrame {
 						Statement dbState = null;
 						dbConn = help.GetConnection();
 						dbState = dbConn.createStatement();
-						String sql = "insert into T_ShouRu values('" + MainFrame.USERNAME + "','"
-								+ textfield_time.getText() + "',"
-								+ Math.abs(Double.parseDouble(textfield_money.getText())) + ",'"
-								+ textfield_info.getText() + "')";
+						String sql = "update T_ZhiChu set ZhiChuTime='" + textfield_time.getText() + "',ZhiChuMoney="
+								+ Math.abs(Double.parseDouble(textfield_money.getText())) + ",ZhiChuInfo='"
+								+ textfield_info.getText() + "' where ZhiChuIndex=" + index;
 						dbState.executeUpdate(sql);
 						dbState.close();
 						help.Close();
-						JOptionPane.showMessageDialog(null, "提交成功！", "消息", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "修改成功！", "消息", JOptionPane.INFORMATION_MESSAGE);
 						setVisible(false);
 						MainFrame.mf.reshowPanel_szjl();
 						MainFrame.mf.setVisible(true);
@@ -146,7 +150,7 @@ public class AddShouRu extends JFrame {
 								JOptionPane.INFORMATION_MESSAGE);
 						textfield_money.setText("");
 					} else if (ex.getMessage().substring(0, 21).equals("类型 money 发生算术溢出错误，值 =")) {
-						JOptionPane.showMessageDialog(null, "提交失败！\n您一次收入了这么多钱？请重新输入！", "消息",
+						JOptionPane.showMessageDialog(null, "提交失败！\n您一次支出了这么多钱？请重新输入！", "消息",
 								JOptionPane.INFORMATION_MESSAGE);
 						textfield_money.setText("");
 					} else {

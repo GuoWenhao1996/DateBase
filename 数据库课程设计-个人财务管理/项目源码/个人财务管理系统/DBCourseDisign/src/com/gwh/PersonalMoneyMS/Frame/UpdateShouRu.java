@@ -21,8 +21,9 @@ import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
 import com.gwh.PersonalMoneyMS.Util.JiaMi;
 import com.gwh.PersonalMoneyMS.Util.ShiJian;
 
-public class AddShouRu extends JFrame {
+public class UpdateShouRu extends JFrame {
 
+	private int index = 0;
 	private JLabel lable_zhanwei = new JLabel("     ");
 	private JLabel lable_time = new JLabel("时       间：");
 	private JLabel lable_money = new JLabel("收入 (元)：");
@@ -45,8 +46,9 @@ public class AddShouRu extends JFrame {
 	private JPanel p3 = new JPanel();
 	private JPanel p4 = new JPanel();
 
-	public AddShouRu() {
-		super("添加收入信息");
+	public UpdateShouRu(String str1, String str2, String str3, int i) {
+		super("修改收入信息");
+		index = i;
 		setSize(550, 350);
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -63,6 +65,9 @@ public class AddShouRu extends JFrame {
 		button_tijiao.setFont(new Font("Dialog", 0, 20));
 		button_qingkong.setFont(new Font("Dialog", 0, 20));
 		button_guanbi.setFont(new Font("Dialog", 0, 20));
+		textfield_time.setText(str1);
+		textfield_money.setText(str2);
+		textfield_info.setText(str3);
 		p0.add(lable_zhanwei);
 		p1_1.add(button_gettime);
 		p1.add(lable_time);
@@ -119,14 +124,13 @@ public class AddShouRu extends JFrame {
 						Statement dbState = null;
 						dbConn = help.GetConnection();
 						dbState = dbConn.createStatement();
-						String sql = "insert into T_ShouRu values('" + MainFrame.USERNAME + "','"
-								+ textfield_time.getText() + "',"
-								+ Math.abs(Double.parseDouble(textfield_money.getText())) + ",'"
-								+ textfield_info.getText() + "')";
+						String sql = "update T_ShouRu set ShouRuTime='" + textfield_time.getText() + "',ShouRuMoney="
+								+ Math.abs(Double.parseDouble(textfield_money.getText())) + ",ShouRuInfo='"
+								+ textfield_info.getText() + "' where ShouRuIndex=" + index;
 						dbState.executeUpdate(sql);
 						dbState.close();
 						help.Close();
-						JOptionPane.showMessageDialog(null, "提交成功！", "消息", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "修改成功！", "消息", JOptionPane.INFORMATION_MESSAGE);
 						setVisible(false);
 						MainFrame.mf.reshowPanel_szjl();
 						MainFrame.mf.setVisible(true);

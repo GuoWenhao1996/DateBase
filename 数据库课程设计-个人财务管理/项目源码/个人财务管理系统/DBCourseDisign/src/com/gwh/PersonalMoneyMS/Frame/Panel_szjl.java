@@ -1,5 +1,6 @@
 package com.gwh.PersonalMoneyMS.Frame;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -23,12 +24,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
+import com.gwh.PersonalMoneyMS.Util.JiaMi;
 
 public class Panel_szjl extends JPanel {
-	private int MAXINDEX=999999;
+	private int MAXINDEX = 999999;
 	private BigDecimal money_sum = new BigDecimal(Double.toString(0));
 	private String money = null;
-	private int[] index=new int[MAXINDEX];
+	private int[] index = new int[MAXINDEX];
 	private JTable table = new JTable();
 	private JScrollPane scrollpane = new JScrollPane();
 	private Vector rowData = new Vector();
@@ -55,8 +57,9 @@ public class Panel_szjl extends JPanel {
 	private JPanel p4 = new JPanel();
 
 	protected Panel_szjl() {
-		Information("select ShouRuIndex,ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='" + MainFrame.USERNAME
-				+ "' " + "union select ZhiChuIndex,ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
+		Information("select ShouRuIndex,ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='"
+				+ MainFrame.USERNAME + "' "
+				+ "union select ZhiChuIndex,ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
 				+ "where userName='" + MainFrame.USERNAME + "' " + "order by ShouRuTime");
 		myEventListener();
 		BoxLayout horizontal = new BoxLayout(p, BoxLayout.Y_AXIS);
@@ -88,7 +91,7 @@ public class Panel_szjl extends JPanel {
 		Statement dbState = null;
 		ResultSet dbRs = null;
 		DBHelper dbhelpr = new DBHelper();
-		int szindex=0;
+		int szindex = 0;
 		rowData.clear();
 		columName.clear();
 		columName.add("日期");
@@ -101,10 +104,10 @@ public class Panel_szjl extends JPanel {
 			dbRs = dbState.executeQuery(sql);
 			money_sum = new BigDecimal(Double.toString(0));
 			while (dbRs.next()) {
-				index[szindex]=dbRs.getInt("ShouRuIndex");
+				index[szindex] = dbRs.getInt("ShouRuIndex");
 				szindex++;
-				if(szindex==MAXINDEX)
-					szindex=0;
+				if (szindex == MAXINDEX)
+					szindex = 0;
 				Vector vNext = new Vector();
 				vNext.add(dbRs.getString("ShouRuTime"));
 				money = dbRs.getString("ShouRuMoney");
@@ -154,21 +157,7 @@ public class Panel_szjl extends JPanel {
 		button_chaxun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String _rq1 = textfield_rq1.getText();
-				String _rq2 = textfield_rq2.getText();
-				if (textfield_rq1.getText().equals("")) {
-					_rq1 = "1900-01-01";
-				}
-				if (textfield_rq2.getText().equals("")) {
-					_rq2 = "9999-12-31";
-				}
-				Information("select ShouRuIndex,ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='"
-						+ MainFrame.USERNAME + "' and ShouRuTime between '" + _rq1 + "' and '" + _rq2 + "'"
-						+ "or ShouRuTime between '" + _rq2 + "' and '" + _rq1 + "'"
-						+ "union select ZhiChuIndex,ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
-						+ "where userName='" + MainFrame.USERNAME + "' and ZhiChuTime between '" + _rq1 + "' and '"
-						+ _rq2 + "'" + "or ZhiChuTime between '" + _rq2 + "' and '" + _rq1 + "'"
-						+ "order by ShouRuTime");
+				chaxun();
 				MainFrame.mf.repaint();
 			}
 		});
@@ -198,10 +187,39 @@ public class Panel_szjl extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int[] selectRows = table.getSelectedRows();
-				System.out.println("选中了："+selectRows.length+" 行");
-				for (int i = 0; i < selectRows.length; i++) {
-					System.out.print("id="+index[selectRows[i]]+"  ");
-					System.out.println(selectRows[i] + " ");
+				String sql = null;
+				if (selectRows.length <= 0) {
+					JOptionPane.showMessageDialog(null, "请选择要删除的行！", "消息", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "按住Ctrl可同时选择多行！", "小提示", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					int n = JOptionPane.showConfirmDialog(null, "是否要删除选中的这 " + selectRows.length + " 行？", "提示",
+							JOptionPane.YES_NO_OPTION);
+					if (n == 0) {
+						try {
+							DBHelper help = new DBHelper();
+							Connection dbConn = null;
+							Statement dbState = null;
+							dbConn = help.GetConnection();
+							dbState = dbConn.createStatement();
+							for (int i = 0; i < selectRows.length; i++) {
+								if (Double.parseDouble(table.getValueAt(selectRows[i], 1).toString()) > 0) {
+									sql = "delete from T_ShouRu where ShouRuIndex=" + index[selectRows[i]];
+								} else {
+									sql = "delete from T_ZhiChu where ZhiChuIndex=" + index[selectRows[i]];
+								}
+								dbState.executeUpdate(sql);
+							}
+							dbState.close();
+							help.Close();
+							JOptionPane.showMessageDialog(null, "记录删除成功！", "消息", JOptionPane.INFORMATION_MESSAGE);
+							chaxun();
+							MainFrame.mf.repaint();
+						} catch (SQLException ex) {
+							System.err.println(ex.getMessage());
+							JOptionPane.showMessageDialog(null, "操作失败！\n" + ex.getMessage(), "消息",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
 				}
 			}
 		});
@@ -209,8 +227,48 @@ public class Panel_szjl extends JPanel {
 		button_xiugai.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				int[] selectRows = table.getSelectedRows();
+				String sql = null;
+				if (selectRows.length <= 0) {
+					JOptionPane.showMessageDialog(null, "请选择要修改的行！", "消息", JOptionPane.INFORMATION_MESSAGE);
+				} else if (selectRows.length > 1) {
+					JOptionPane.showMessageDialog(null, "每次只能修改 1 行！", "消息", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					int n = JOptionPane.showConfirmDialog(null, "是否要修改选中的这 1 行？", "提示", JOptionPane.YES_NO_OPTION);
+					if (n == 0) {
+						if (Double.parseDouble(table.getValueAt(selectRows[0], 1).toString()) > 0) {
+							UpdateShouRu usr = new UpdateShouRu(table.getValueAt(selectRows[0], 0).toString(),
+									table.getValueAt(selectRows[0], 1).toString(),
+									table.getValueAt(selectRows[0], 2).toString(), index[selectRows[0]]);
+							usr.setVisible(true);
+							MainFrame.mf.setVisible(false);
+						} else {
+							UpdateZhiChu uzc = new UpdateZhiChu(table.getValueAt(selectRows[0], 0).toString(),
+									table.getValueAt(selectRows[0], 1).toString(),
+									table.getValueAt(selectRows[0], 2).toString(), index[selectRows[0]]);
+							uzc.setVisible(true);
+							MainFrame.mf.setVisible(false);
+						}
+					}
+				}
 			}
 		});
+	}
+
+	private void chaxun() {
+		String _rq1 = textfield_rq1.getText();
+		String _rq2 = textfield_rq2.getText();
+		if (textfield_rq1.getText().equals("")) {
+			_rq1 = "1900-01-01";
+		}
+		if (textfield_rq2.getText().equals("")) {
+			_rq2 = "9999-12-31";
+		}
+		Information("select ShouRuIndex,ShouRuTime,ShouRuMoney,ShouRuInfo from T_ShouRu " + "where userName='"
+				+ MainFrame.USERNAME + "' and ShouRuTime between '" + _rq1 + "' and '" + _rq2 + "'"
+				+ "or ShouRuTime between '" + _rq2 + "' and '" + _rq1 + "'"
+				+ "union select ZhiChuIndex,ZhiChuTime,ZhiChuMoney=-ZhiChuMoney,ZhiChuInfo from T_ZhiChu "
+				+ "where userName='" + MainFrame.USERNAME + "' and ZhiChuTime between '" + _rq1 + "' and '" + _rq2 + "'"
+				+ "or ZhiChuTime between '" + _rq2 + "' and '" + _rq1 + "'" + "order by ShouRuTime");
 	}
 }

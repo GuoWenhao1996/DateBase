@@ -59,7 +59,6 @@ public class AddZhiChu extends JFrame {
 		textfield_time.setFont(new Font("Dialog", 0, 20));
 		textfield_money.setFont(new Font("Dialog", 0, 20));
 		textfield_info.setFont(new Font("Dialog", 0, 14));
-		textfield_money.setFont(new Font("Dialog", 0, 20));
 		button_gettime.setFont(new Font("Dialog", 0, 12));
 		button_tijiao.setFont(new Font("Dialog", 0, 20));
 		button_qingkong.setFont(new Font("Dialog", 0, 20));
@@ -105,14 +104,16 @@ public class AddZhiChu extends JFrame {
 		button_tijiao.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (textfield_time.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "请输入时间！", "消息", JOptionPane.WARNING_MESSAGE);
-				} else if (textfield_money.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "请输入支出金额！", "消息", JOptionPane.WARNING_MESSAGE);
-				} else if (textfield_info.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "请输入备注！", "消息", JOptionPane.WARNING_MESSAGE);
-				} else {
-					try {
+				try {
+					if (textfield_time.getText().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "请输入时间！", "消息", JOptionPane.WARNING_MESSAGE);
+					} else if (textfield_money.getText().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "请输入支出金额！", "消息", JOptionPane.WARNING_MESSAGE);
+					} else if (Double.parseDouble(textfield_money.getText()) == 0) {
+						JOptionPane.showMessageDialog(null, "支出0元就不存了吧，没必要！", "消息", JOptionPane.WARNING_MESSAGE);
+					} else if (textfield_info.getText().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "请输入备注！", "消息", JOptionPane.WARNING_MESSAGE);
+					} else {
 						DBHelper help = new DBHelper();
 						Connection dbConn = null;
 						Statement dbState = null;
@@ -129,24 +130,28 @@ public class AddZhiChu extends JFrame {
 						setVisible(false);
 						MainFrame.mf.reshowPanel_szjl();
 						MainFrame.mf.setVisible(true);
-					} catch (Exception ex) {
-						System.err.println(ex.getMessage());
-						if (ex.getMessage().equals("从字符串转换日期和/或时间时，转换失败。")) {
-							JOptionPane.showMessageDialog(null, "提交失败！\n日期请输入yyyy-mm-dd hh-mm-ss格式", "消息",
-									JOptionPane.INFORMATION_MESSAGE);
-							textfield_time.setText("");
-						} else if (ex.getMessage().substring(0, 17).equals("For input string:")) {
-							JOptionPane.showMessageDialog(null, "提交失败！\n请输入正确的金额！请重新输入！", "消息",
-									JOptionPane.INFORMATION_MESSAGE);
-							textfield_money.setText("");
-						} else if (ex.getMessage().substring(0, 21).equals("类型 money 发生算术溢出错误，值 =")) {
-							JOptionPane.showMessageDialog(null, "提交失败！\n您一次支出了这么多钱？请重新输入！", "消息",
-									JOptionPane.INFORMATION_MESSAGE);
-							textfield_money.setText("");
-						} else {
-							JOptionPane.showMessageDialog(null, "操作失败！\n" + ex.getMessage(), "消息",
-									JOptionPane.ERROR_MESSAGE);
-						}
+					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null, "提交失败！\n请输入正确的金额！请重新输入！", "消息",
+							JOptionPane.INFORMATION_MESSAGE);
+					textfield_money.setText("");
+				} catch (Exception ex) {
+					System.err.println(ex.getMessage());
+					if (ex.getMessage().equals("从字符串转换日期和/或时间时，转换失败。")) {
+						JOptionPane.showMessageDialog(null, "提交失败！\n日期请输入yyyy-mm-dd hh-mm-ss格式", "消息",
+								JOptionPane.INFORMATION_MESSAGE);
+						textfield_time.setText("");
+					} else if (ex.getMessage().substring(0, 17).equals("For input string:")) {
+						JOptionPane.showMessageDialog(null, "提交失败！\n请输入正确的金额！请重新输入！", "消息",
+								JOptionPane.INFORMATION_MESSAGE);
+						textfield_money.setText("");
+					} else if (ex.getMessage().substring(0, 21).equals("类型 money 发生算术溢出错误，值 =")) {
+						JOptionPane.showMessageDialog(null, "提交失败！\n您一次支出了这么多钱？请重新输入！", "消息",
+								JOptionPane.INFORMATION_MESSAGE);
+						textfield_money.setText("");
+					} else {
+						JOptionPane.showMessageDialog(null, "操作失败！\n" + ex.getMessage(), "消息",
+								JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}

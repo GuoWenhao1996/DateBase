@@ -26,15 +26,15 @@ import com.gwh.PersonalMoneyMS.DBLink.DBHelper;
 public class Panel_zhyaq extends JPanel {
 
 	private JTable table = new JTable();
-	private JScrollPane scrollpane = null;
+	private JScrollPane scrollpane = new JScrollPane();
 	private Vector rowData = new Vector();
 	private Vector columName = new Vector();
 
 	private JButton button_chaxun = new JButton("查询");
 	private JLabel lable_rq = new JLabel("日期:");
 	private JLabel lable = new JLabel("~");
-	private JTextField textfield_rq1 = new JTextField(10);
-	private JTextField textfield_rq2 = new JTextField(10);
+	private JTextField textfield_rq1 = new JTextField(11);
+	private JTextField textfield_rq2 = new JTextField(11);
 
 	private JButton button_xiugai = new JButton("有异常登录？修改密码！");
 
@@ -67,6 +67,7 @@ public class Panel_zhyaq extends JPanel {
 		ResultSet dbRs = null;
 		DBHelper dbhelpr = new DBHelper();
 		rowData.clear();
+		columName.clear();
 		columName.add("登录次数");
 		columName.add("登录时间");
 		// 查询课程信息表
@@ -109,7 +110,7 @@ public class Panel_zhyaq extends JPanel {
 
 		table.setPreferredScrollableViewportSize(new Dimension(300, 350));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-		scrollpane = new JScrollPane(table);
+		scrollpane.setViewportView(table);
 	}
 
 	private void myEventListener() {
@@ -136,8 +137,8 @@ public class Panel_zhyaq extends JPanel {
 		button_xiugai.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-                UpdatePwd upwd = new UpdatePwd();
-                upwd.setVisible(true);
+				UpdatePwd upwd = new UpdatePwd();
+				upwd.setVisible(true);
 				MainFrame.mf.setVisible(false);
 			}
 		});
