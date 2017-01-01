@@ -60,13 +60,14 @@ public class MainFrame extends JFrame {
 	Panel_szjl p_szjl = new Panel_szjl();
 	Panel_srxq p_srxq = new Panel_srxq();
 	Panel_zcxq p_zcxq = new Panel_zcxq();
+	Panel_grxx p_grxx = new Panel_grxx();
 
 	public MainFrame() {
 		super("个人财务管理系统");
 		DBHelper dbhelpr = new DBHelper();
 		dbhelpr.TestConn();
 		setSize(980, 600);
-		setResizable(false);
+		//setResizable(false);
 		setLocationRelativeTo(null);
 		myLayout();
 		myEventListener();
@@ -170,7 +171,9 @@ public class MainFrame extends JFrame {
 				p_srxq.p.setVisible(false);
 				p_zcxq.p.setVisible(false);
 				// 添加个人信息管理Panel
-
+				p_grxx = new Panel_grxx();
+				panel_info.add(p_grxx.p);
+				setVisible(true);
 			}
 		});
 		// 收支记录管理
@@ -187,7 +190,7 @@ public class MainFrame extends JFrame {
 				p_zhyaq.p.setVisible(false);
 				p_srxq.p.setVisible(false);
 				p_zcxq.p.setVisible(false);
-
+				p_grxx.p.setVisible(false);
 				// 添加收支记录管理Panel
 				p_szjl = new Panel_szjl();
 				panel_info.add(p_szjl.p);
@@ -208,7 +211,7 @@ public class MainFrame extends JFrame {
 				p_zhyaq.p.setVisible(false);
 				p_szjl.p.setVisible(false);
 				p_zcxq.p.setVisible(false);
-
+				p_grxx.p.setVisible(false);
 				// 添加收入明细管理Panel
 				p_srxq = new Panel_srxq();
 				panel_info.add(p_srxq.p);
@@ -229,7 +232,7 @@ public class MainFrame extends JFrame {
 				p_zhyaq.p.setVisible(false);
 				p_szjl.p.setVisible(false);
 				p_srxq.p.setVisible(false);
-
+				p_grxx.p.setVisible(false);
 				// 添加支出明细管理Panel
 				p_zcxq = new Panel_zcxq();
 				panel_info.add(p_zcxq.p);
@@ -250,7 +253,7 @@ public class MainFrame extends JFrame {
 				p_szjl.p.setVisible(false);
 				p_srxq.p.setVisible(false);
 				p_zcxq.p.setVisible(false);
-
+				p_grxx.p.setVisible(false);
 				// 添加账户与安全管理Panel
 				p_zhyaq = new Panel_zhyaq();
 				panel_info.add(p_zhyaq.p);
@@ -276,7 +279,7 @@ public class MainFrame extends JFrame {
 					p_szjl.p.setVisible(false);
 					p_srxq.p.setVisible(false);
 					p_zcxq.p.setVisible(false);
-
+					p_grxx.p.setVisible(false);
 					// 添加登录Panel
 					panel_Login.setVisible(true);
 				}
@@ -298,8 +301,7 @@ public class MainFrame extends JFrame {
 						// 清空密码框与密码提示框
 						textfield_passworld.setText("");
 						lable_passworldTiShi.setText("");
-						// 打开6个button
-						button_grxx.setEnabled(true);
+						// 打开5个button 个人信息不开
 						button_szjl.setEnabled(true);
 						button_srmx.setEnabled(true);
 						button_zcmx.setEnabled(true);
@@ -308,6 +310,10 @@ public class MainFrame extends JFrame {
 						button_zx.setBackground(new Color(232, 17, 35));
 						// 隐藏登录页
 						panel_Login.setVisible(false);
+						//显示个人信息
+						p_grxx = new Panel_grxx();
+						panel_info.add(p_grxx.p);
+						setVisible(true);
 					} else {
 						JOptionPane.showMessageDialog(null, "登录失败！\n用户名或密码错误！", "消息", JOptionPane.ERROR_MESSAGE);
 					}

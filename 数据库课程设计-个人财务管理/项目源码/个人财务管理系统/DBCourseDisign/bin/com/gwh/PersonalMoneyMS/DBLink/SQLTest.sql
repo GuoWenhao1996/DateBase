@@ -24,3 +24,6 @@ delete from T_ShouRu where ShouRuIndex=46
 delete from T_ZhiChu where ZhiChuIndex=19
 
 update T_ShouRu set ShouRuTime='111',ShouRuMoney=111,ShouRuInfo='111' where ShouRuIndex=111
+
+select xm,xb,nl,gzdw,zw from T_UserInfo
+update T_UserInfo set xm='',xb='',nl='',gzdw='',zw='' where userName='test'
