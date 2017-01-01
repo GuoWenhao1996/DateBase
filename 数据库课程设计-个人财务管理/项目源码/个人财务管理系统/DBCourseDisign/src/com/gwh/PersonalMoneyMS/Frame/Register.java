@@ -119,9 +119,10 @@ public class Register extends JFrame {
 						Statement dbState = null;
 						dbConn = help.GetConnection();
 						dbState = dbConn.createStatement();
-						String sql = "insert into T_User values('"+textfield_userName.getText()+"','"
-																  +JiaMi.getMD5(textfield_pwd1.getText())+"','"
-																  +textfield_pwdTiShi.getText()+"')";
+						String sql = "insert into T_User values('" + textfield_userName.getText() + "','"
+								+ JiaMi.getMD5(textfield_pwd1.getText()) + "','" + textfield_pwdTiShi.getText() + "')";
+						dbState.executeUpdate(sql);
+						sql = "insert into T_UserInfo values('" + textfield_userName.getText() + "','','','','','')";
 						dbState.executeUpdate(sql);
 						dbState.close();
 						help.Close();
@@ -132,11 +133,13 @@ public class Register extends JFrame {
 					} catch (SQLException ex) {
 						System.err.println(ex.getMessage());
 						if (ex.getMessage().equals("违反了 PRIMARY KEY 约束 'PK_T_User'。不能在对象 'dbo.T_User' 中插入重复键。")) {
-			                JOptionPane.showMessageDialog(null, "注册失败！\n该用户名已存在！请重新输入！", "消息", JOptionPane.INFORMATION_MESSAGE);
-			        		textfield_userName.setText("");
-			            } else {
-			                JOptionPane.showMessageDialog(null, "操作失败！\n" + ex.getMessage(), "消息", JOptionPane.ERROR_MESSAGE);
-			            }
+							JOptionPane.showMessageDialog(null, "注册失败！\n该用户名已存在！请重新输入！", "消息",
+									JOptionPane.INFORMATION_MESSAGE);
+							textfield_userName.setText("");
+						} else {
+							JOptionPane.showMessageDialog(null, "操作失败！\n" + ex.getMessage(), "消息",
+									JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}
 			}
