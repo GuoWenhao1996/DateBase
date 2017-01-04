@@ -1,0 +1,3 @@
+PersonalMoneyDB_old 为开发时使用的临时数据库备份，十分不完善。
+
+PersonalMoneyDB_new 为完整数据库备份。
