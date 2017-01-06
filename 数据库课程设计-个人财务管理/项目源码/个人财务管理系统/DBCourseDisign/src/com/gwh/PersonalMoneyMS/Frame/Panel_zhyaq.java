@@ -44,7 +44,8 @@ public class Panel_zhyaq extends JPanel {
 	private JPanel p3 = new JPanel();
 
 	protected Panel_zhyaq() {
-		Information("select loginIndex,loginTime from T_UserLogin where userName='" + MainFrame.USERNAME + "'");
+		Information("select loginIndex,loginTime from T_UserLogin where userName='" + MainFrame.USERNAME
+				+ "' order by loginIndex desc");
 		myEventListener();
 		BoxLayout horizontal = new BoxLayout(p, BoxLayout.Y_AXIS);
 		lable.setFont(new Font("Dialog", 0, 30));
@@ -128,7 +129,7 @@ public class Panel_zhyaq extends JPanel {
 				}
 				Information("select loginIndex,loginTime from T_UserLogin where " + "userName='" + MainFrame.USERNAME
 						+ "'" + "and loginTime between '" + _rq1 + "' and '" + _rq2 + "'" + "or loginTime between '"
-						+ _rq2 + "' and '" + _rq1 + "'");
+						+ _rq2 + "' and '" + _rq1 + "' order by loginIndex desc");
 				MainFrame.mf.repaint();
 			}
 		});

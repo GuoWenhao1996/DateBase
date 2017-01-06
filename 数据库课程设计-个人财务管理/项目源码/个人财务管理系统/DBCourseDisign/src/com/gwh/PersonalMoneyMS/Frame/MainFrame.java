@@ -67,7 +67,7 @@ public class MainFrame extends JFrame {
 		DBHelper dbhelpr = new DBHelper();
 		dbhelpr.TestConn();
 		setSize(980, 600);
-		//setResizable(false);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		myLayout();
 		myEventListener();
@@ -378,7 +378,7 @@ public class MainFrame extends JFrame {
 		try {
 			dbConn = help.GetConnection();
 			dbState = dbConn.createStatement();
-			sql = "select loginIndex from T_userLogin where userName='" + USERNAME + "'";
+			sql = "select loginIndex from T_userLogin where userName='" + USERNAME + "' order by loginIndex";
 			dbRs = dbState.executeQuery(sql);
 			while (dbRs.next()) {
 				index = Integer.parseInt(dbRs.getString(1));
