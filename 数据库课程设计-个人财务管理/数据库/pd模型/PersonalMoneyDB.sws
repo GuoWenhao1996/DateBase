@@ -5,7 +5,7 @@
 <Workspace>
 	<Local Expanded="Yes">
 		<Model Expanded="Yes" ID="{587E80BC-53E0-4323-AE9F-F9D322484C72}" Name="PersonalMoneyDB" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="PersonalMoneyDB.cdm"/>
-		<Model Expanded="Yes" ID="{64CBD393-3E41-48A8-8ED3-4BE532D0D96B}" Name="PersonalMoneyDB" Selected="Yes" Type="{5F45F978-C4F3-4E35-A3FC-AF3318663A0F}" URL="PersonalMoneyDB.ldm"/>
+		<Model Expanded="Yes" ID="{64CBD393-3E41-48A8-8ED3-4BE532D0D96B}" Name="PersonalMoneyDB" Type="{5F45F978-C4F3-4E35-A3FC-AF3318663A0F}" URL="PersonalMoneyDB.ldm"/>
 		<Model Expanded="Yes" ID="{A31658BE-81FA-4B6E-B02C-2CEF175606D9}" Name="PersonalMoneyDB" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="PersonalMoneyDB.pdm"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
