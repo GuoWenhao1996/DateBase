@@ -66,7 +66,7 @@ public class UpdateZhiChu extends JFrame {
 		button_qingkong.setFont(new Font("Dialog", 0, 20));
 		button_guanbi.setFont(new Font("Dialog", 0, 20));
 		textfield_time.setText(str1);
-		textfield_money.setText(str2);
+		textfield_money.setText(str2.substring(1));
 		textfield_info.setText(str3);
 		p0.add(lable_zhanwei);
 		p1_1.add(button_gettime);
